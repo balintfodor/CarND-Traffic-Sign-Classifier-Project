@@ -36,17 +36,17 @@ Here is a link to my [project code](https://github.com/balintfodor/CarND-Traffic
 
 ####1. Provide a basic summary of the data set. In the code, the analysis should be done using python, numpy and/or pandas methods rather than hardcoding results manually.
 
-I used the numpy:
+I used numpy for the task:
 
 * Number of training examples = 34799
-* Number of training examples = 4410
+* Number of validation examples = 4410
 * Number of testing examples = 12630
 * Image data shape = (32, 32, 3)
 * Number of classes = 43
 
 ####2. Include an exploratory visualization of the dataset.
 
-I plotted the histogram of the individual classes in the training set. We can clearly see that the different classes are not represented equally. This can cause problem since the network can easily reach a better-than-random guessing just by predicitng the most populated classes instead of analysing the image content. We will handle this problem in the data augmentation phase (Step 2).
+I plotted the histogram of the individual classes in the training set. We can clearly see that the different classes are not represented equally. This can cause problem since the network can easily reach a better-than-random guessing just by predicting the most populated classes instead of analysing the image content. I will handle this problem in the data augmentation phase (Step 2).
 
 ![](writeup_assets/class_histogram_orig.png)
 
@@ -97,11 +97,11 @@ To reach the final solution I tuned the model, the training parameters and the p
 
 First I tried with an unmodified LeNet (sigma param is at 0.1), the batch size was small (32-64-128) and grayscale [-1,1] images. First I used gradient descent with a small learning rate to check that the model works: the loss is decreasing. Then switched to Adam and played with the learning rate. These setups were not satisfying, from a certain number of epochs the validation accuracy started to stagnate or even decrease.
 
-Then a modified the preprocessing to do an rgb2hsv conversion. I hoped that the dominant tones of the traffic signs can help the model train. I tripled the number of feature maps in the model, and also played with larger layer numbers in the fully connected layers. It was not satisfying and I had the feeling that the model was much larger than it should be and it can be the explanation for the slow learning.
+Then I modified the preprocessing to do an rgb2hsv conversion. I hoped that the dominant tones of the traffic signs can help the model train. I tripled the number of feature maps in the model, and also played with larger layer numbers in the fully connected layers. It was not satisfying and I had the feeling that the model was much larger than it should be and it can be the explanation for the slow learning.
 
 So I went back for grayscale preprocessing. Noticed that the sigma parameter in the weight initialization is really significant. Played with the learning rate and the batch size. Reached approx. 0.8-0.85 accuracy. Enlarging only the fully connected layers by a factor of 2 and 3 did not helped, but enlarging only the number of feature maps by a factor of 2 helped. I went back to tune the learning rate properly so the training go a bit faster.
 
-My final result for the traning loss is below 0.0001, the training accuracy is above 0.9999, the validation loss is 1.2023 and the validation accuracy is 0.9358. Note that the validation accuracy was above 0.93 for 5 validation accuracy measurement (which is 5*512 batch training step). The maximum validation accuracy was 0.9501. The accuracy on the test set was 0.9121.
+My final result for the traning loss is below 0.0001, the training accuracy is above 0.9999, the validation loss is 1.2023 and the validation accuracy is 0.9358. Note that the validation accuracy was above 0.93 for 5 validation accuracy measurement (which is 5*512 batch training steps). The maximum validation accuracy was 0.9501. The accuracy on the test set was 0.9121.
 
 ###Test a Model on New Images
 
@@ -111,11 +111,11 @@ I chose 6 images, rescaled and cropped to fit the shape 32x32x3:
 
 ![](writeup_assets/s1.png) ![](writeup_assets/s2.png) ![](writeup_assets/s3.png) ![](writeup_assets/s4.png) ![](writeup_assets/s5.png) ![](writeup_assets/s6.png)
 
-I expected that image 5 is be hard to classify because of the fuzzy background and the blurry pictogram.
+I expected that image 5 is hard to classify because of the fuzzy background and the blurry pictogram.
 
 ####2. Discuss the model's predictions on these new traffic signs and compare the results to predicting on the test set. At a minimum, discuss what the predictions were, the accuracy on these new predictions, and compare the accuracy to the accuracy on the test set (OPTIONAL: Discuss the results in more detail as described in the "Stand Out Suggestions" part of the rubric).
 
-Instead of using the sign names csv file, I used the model to predict the images and picked a random image from the training set with a class matching the prediction. It is more intuitive for me.
+I used the model to predict the images and picked a random image from the training set with a class matching the prediction, instead of using the signnames.csv file to identify the signs. It is more intuitive for me.
 
 ![](writeup_assets/new_images_pred.png)
 ![](writeup_assets/new_images_real.png)
